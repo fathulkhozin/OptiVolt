@@ -504,7 +504,7 @@ export default function Home() {
                         </div>
                         <div className="flex justify-between items-center py-3 border-b border-gray-800/50">
                             <span className="text-gray-400">System Voltage</span>
-                            <span class="font-bold text-white text-lg">{set ? set.sys_volt : '--'} V</span>
+                            <span className="font-bold text-white text-lg">{set ? set.sys_volt : '--'} V</span>
                         </div>
                         <div className="flex justify-between items-center py-3 border-b border-gray-800/50">
                             <span className="text-gray-400">Battery Capacity</span>
