@@ -125,7 +125,7 @@ export default function Home() {
 
   const handleToggleLoad = async (checked: boolean) => {
       const fbService = FirebaseService.getInstance();
-      await fbService.toggleLoad(!checked); 
+      await fbService.toggleLoad(checked); 
   };
 
   const saveSettings = async (e: React.FormEvent) => {
