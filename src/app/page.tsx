@@ -566,6 +566,29 @@ export default function Home() {
                         </div>
                     </form>
                 </div>
+
+                {/* Firmware Update (OTA) Form */}
+                <div className="glass-panel rounded-2xl p-6 md:p-8 col-span-1 lg:col-span-2 mt-2">
+                    <div className="flex items-center gap-4 mb-6">
+                        <div className="p-3 bg-purple-500/10 rounded-xl">
+                            <Cpu className="w-6 h-6 text-purple-400" />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold">Remote Firmware Update (OTA)</h3>
+                            <p className="text-sm text-gray-400">Upload .bin file to flash ESP32 over WiFi</p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-4 max-w-xl">
+                        <input type="file" accept=".bin" className="block w-full text-sm text-gray-400 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-white hover:file:bg-gray-700 transition-colors cursor-pointer border border-gray-800 rounded-xl" />
+                        <button onClick={() => alert("Note: Because this dashboard is now hosted online on Vercel/Firebase, OTA updates require the ESP32 to download the .bin from Firebase Storage. This feature will be available in the next firmware upgrade!")} className="w-full text-black font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2" style={{background: 'linear-gradient(135deg, #c9a227, #a07c1a)', border: '1px solid #f0d060', boxShadow: '0 4px 15px rgba(201,162,39,0.3)'}}>
+                            <Zap className="w-4 h-4" /> Flash to ESP32
+                        </button>
+                        <span className="text-sm text-gray-400 text-center block mt-2">
+                            <span className="align-middle">Status: Ready</span>
+                        </span>
+                    </div>
+                </div>
             </div>
         )}
 
