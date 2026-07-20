@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FirebaseService } from '../services/FirebaseService';
 import { OptiVoltDevice } from '../models/OptiVoltDevice';
-import { LayoutDashboard, BarChart2, Settings, LogOut, Zap, Battery, AlertTriangle, Activity, Gauge, Terminal, Info, Edit3, Cpu, CheckCircle } from 'lucide-react';
+import { LayoutDashboard, BarChart2, Settings, LogOut, Zap, Battery, AlertTriangle, Activity, Gauge, Terminal, Info, Edit3, Cpu, CheckCircle, Menu, X } from 'lucide-react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -36,6 +36,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'analytics' | 'settings'>('dashboard');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Historical data for charts
   const [historyLabels, setHistoryLabels] = useState<string[]>([]);
@@ -237,26 +238,36 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen text-gray-900 bg-gray-50">
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setIsMobileMenuOpen(false)}></div>
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 flex flex-col z-10 shrink-0 bg-white border-r border-gray-200 shadow-sm">
-        <div className="p-5 flex items-center gap-3 border-b border-gray-200">
-            <img src="/logo.jpg" alt="Logo Kopdes" className="w-10 h-10 object-contain rounded-md" />
-            <div>
-                <h1 className="font-bold text-lg tracking-tight text-gray-900">KOPDES</h1>
-                <p className="text-xs text-red-600 font-semibold">MERAH PUTIH</p>
+      <aside className={`w-64 flex flex-col z-50 bg-white border-r border-gray-200 shadow-sm fixed md:static inset-y-0 left-0 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
+        <div className="p-5 flex items-center justify-between border-b border-gray-200">
+            <div className="flex items-center gap-3">
+                <img src="/logo.jpg" alt="Logo Kopdes" className="w-10 h-10 object-contain rounded-md" />
+                <div>
+                    <h1 className="font-bold text-lg tracking-tight text-gray-900">KOPDES</h1>
+                    <p className="text-xs text-red-600 font-semibold">MERAH PUTIH</p>
+                </div>
             </div>
+            <button className="md:hidden text-gray-500 hover:text-gray-900" onClick={() => setIsMobileMenuOpen(false)}>
+                <X className="w-6 h-6" />
+            </button>
         </div>
         
         <nav className="flex-1 p-4 space-y-1.5">
-            <button onClick={() => setActiveTab('dashboard')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'dashboard' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
+            <button onClick={() => { setActiveTab('dashboard'); setIsMobileMenuOpen(false); }} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'dashboard' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
                 <LayoutDashboard className="w-5 h-5" />
                 <span>Dashboard</span>
             </button>
-            <button onClick={() => setActiveTab('analytics')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'analytics' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
+            <button onClick={() => { setActiveTab('analytics'); setIsMobileMenuOpen(false); }} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'analytics' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
                 <BarChart2 className="w-5 h-5" />
                 <span>Analytics</span>
             </button>
-            <button onClick={() => setActiveTab('settings')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'settings' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
+            <button onClick={() => { setActiveTab('settings'); setIsMobileMenuOpen(false); }} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'settings' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
                 <Settings className="w-5 h-5" />
                 <span>Settings</span>
             </button>
@@ -277,11 +288,16 @@ export default function Home() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 p-8 overflow-y-auto">
+      <main className="flex-1 p-4 md:p-8 overflow-y-auto">
         <header className="mb-8 flex justify-between items-end">
-            <div>
-                <h2 className="text-2xl font-bold text-gray-900">OptiVolt Controller Overview</h2>
-                <p className="text-gray-500 text-sm mt-1">Real-time performance metrics via Firebase</p>
+            <div className="flex items-center gap-4">
+                <button className="md:hidden text-gray-900 bg-white p-2 rounded-lg shadow-sm border border-gray-200" onClick={() => setIsMobileMenuOpen(true)}>
+                    <Menu className="w-6 h-6" />
+                </button>
+                <div>
+                    <h2 className="text-xl md:text-2xl font-bold text-gray-900">OptiVolt Controller Overview</h2>
+                    <p className="text-gray-500 text-sm mt-1">Real-time performance metrics via Firebase</p>
+                </div>
             </div>
             {/* Logo on top right just as an aesthetic touch */}
             <div className="hidden md:block opacity-10">
