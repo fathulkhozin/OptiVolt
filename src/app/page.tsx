@@ -139,34 +139,30 @@ export default function Home() {
 
   if (!isLoggedIn) {
     return (
-      <div id="login-screen" className="fixed inset-0 flex items-center justify-center bg-[#080808]/98 backdrop-blur-md z-50">
-        <div className="glass-panel p-8 rounded-2xl w-full max-w-md mx-4 shadow-2xl" style={{border: '1px solid rgba(201,162,39,0.3)', borderTop: '3px solid #c9a227'}}>
+      <div id="login-screen" className="fixed inset-0 flex items-center justify-center bg-gray-50 backdrop-blur-md z-50">
+        <div className="bg-white p-8 rounded-2xl w-full max-w-md mx-4 shadow-xl border border-gray-100 border-t-4 border-t-red-600">
             <div className="text-center mb-8">
                 <div className="flex justify-center mb-4">
-                    <div className="relative">
-                        <div className="w-20 h-20 rounded-full flex items-center justify-center unu-glow" style={{background: 'linear-gradient(135deg, #1a1208, #2a1e08)', border: '2px solid #c9a227'}}>
-                            <span className="text-3xl">🌟</span>
-                        </div>
-                    </div>
+                    <img src="/logo.jpg" alt="KOPDES Logo" className="w-20 h-20 object-contain" />
                 </div>
                 <div className="mb-1">
-                    <span className="text-3xl font-black gold-shimmer">OptiVolt</span>
+                    <span className="text-2xl font-bold text-gray-900">KOPDES <span className="text-red-600">MERAH PUTIH</span></span>
                 </div>
-                <p className="text-xs tracking-widest uppercase mb-1" style={{color: 'rgba(201,162,39,0.7)'}}>Universitas Nahdlatul Ulama Yogyakarta</p>
-                <p className="text-sm mt-2" style={{color: 'rgba(240,237,232,0.4)'}}>Sistem Monitoring MPPT IoT</p>
+                <p className="text-xs tracking-widest uppercase mb-1 text-gray-500 font-semibold">Sistem Informasi Koperasi Desa</p>
+                <p className="text-sm mt-2 text-gray-400">OptiVolt Controller Portal</p>
             </div>
             <form onSubmit={handleLogin}>
                 <div className="mb-4">
-                    <label className="block text-sm mb-1" style={{color: 'rgba(201,162,39,0.8)'}}>Username</label>
-                    <input type="text" required />
+                    <label className="block text-sm mb-1 text-gray-700 font-medium">Username</label>
+                    <input type="text" required className="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600" />
                 </div>
                 <div className="mb-6">
-                    <label className="block text-sm mb-1" style={{color: 'rgba(201,162,39,0.8)'}}>Password</label>
-                    <input type="password" required />
+                    <label className="block text-sm mb-1 text-gray-700 font-medium">Password</label>
+                    <input type="password" required className="w-full bg-gray-50 border border-gray-300 rounded-lg p-3 text-gray-900 focus:outline-none focus:border-red-600 focus:ring-1 focus:ring-red-600" />
                 </div>
-                {loginError && <p className="text-red-400 text-sm mb-4 text-center">Login failed!</p>}
-                <button type="submit" className="w-full font-bold p-3 rounded-lg transition-all" style={{background: 'linear-gradient(135deg, #c9a227, #a07c1a)', color: '#0a0a0a', boxShadow: '0 4px 20px rgba(201,162,39,0.35)'}}>
-                    🔐 Masuk ke Dashboard
+                {loginError && <p className="text-red-500 text-sm mb-4 text-center">Login failed!</p>}
+                <button type="submit" className="w-full font-bold p-3 rounded-lg transition-all bg-red-600 hover:bg-red-700 text-white shadow-md">
+                    Masuk ke Dashboard
                 </button>
             </form>
         </div>
@@ -189,10 +185,10 @@ export default function Home() {
     },
     scales: {
         x: { display: false },
-        y: { grid: { color: 'rgba(201, 162, 39, 0.1)' }, border: { dash: [4, 4] }, ticks: { color: 'rgba(240, 237, 232, 0.5)' } }
+        y: { grid: { color: 'rgba(0, 0, 0, 0.05)' }, border: { dash: [4, 4] }, ticks: { color: 'rgba(0, 0, 0, 0.5)' } }
     },
     plugins: {
-        legend: { labels: { color: '#f0ede8' } }
+        legend: { labels: { color: '#374151' } }
     }
   };
 
@@ -202,15 +198,15 @@ export default function Home() {
         {
             label: 'Solar Power (W)',
             data: powerPltsData.length > 0 ? powerPltsData : [0],
-            borderColor: '#c9a227',
-            backgroundColor: 'rgba(201, 162, 39, 0.1)',
+            borderColor: '#dc2626',
+            backgroundColor: 'rgba(220, 38, 38, 0.1)',
             fill: true,
             borderWidth: 2
         },
         {
             label: 'Output Power (W)',
             data: powerOutData.length > 0 ? powerOutData : [0],
-            borderColor: '#f0ede8',
+            borderColor: '#374151',
             backgroundColor: 'transparent',
             borderWidth: 2,
             borderDash: [5, 5]
@@ -222,7 +218,7 @@ export default function Home() {
       labels: ['Output Usage', 'System Losses'],
       datasets: [{
           data: [tel ? tel.p_out : 0, sysLoss > 0 ? sysLoss : 0],
-          backgroundColor: ['#3b82f6', '#ef4444'],
+          backgroundColor: ['#2563eb', '#dc2626'],
           borderWidth: 0,
           cutout: '70%'
       }]
@@ -235,40 +231,41 @@ export default function Home() {
   };
 
   return (
-    <div className="flex min-h-screen text-[#f0ede8]">
+    <div className="flex min-h-screen text-gray-900 bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 flex flex-col z-10 shrink-0" style={{background: 'linear-gradient(180deg, #0e0c08 0%, #080808 100%)', borderRight: '1px solid rgba(201,162,39,0.15)'}}>
-        <div className="p-5 flex items-center gap-3" style={{background: 'linear-gradient(135deg, #1a1208, #0e0c06)', borderBottom: '2px solid #c9a227'}}>
+      <aside className="w-64 flex flex-col z-10 shrink-0 bg-white border-r border-gray-200 shadow-sm">
+        <div className="p-5 flex items-center gap-3 border-b border-gray-200">
+            <img src="/logo.jpg" alt="Logo Kopdes" className="w-10 h-10 object-contain rounded-md" />
             <div>
-                <h1 className="font-black text-lg tracking-tight text-white">OptiVolt</h1>
-                <p className="text-xs" style={{color: 'rgba(201,162,39,0.85)'}}>UNU Jogja · IoT MPPT</p>
+                <h1 className="font-bold text-lg tracking-tight text-gray-900">KOPDES</h1>
+                <p className="text-xs text-red-600 font-semibold">MERAH PUTIH</p>
             </div>
         </div>
         
         <nav className="flex-1 p-4 space-y-1.5">
-            <button onClick={() => setActiveTab('dashboard')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'dashboard' ? 'bg-[#c9a227]/10 text-[#e8c547] border-[#c9a227]/25' : 'text-[#f0ede8]/50 border-transparent hover:bg-[#c9a227]/10'}`}>
+            <button onClick={() => setActiveTab('dashboard')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'dashboard' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
                 <LayoutDashboard className="w-5 h-5" />
-                <span className="font-semibold">Dashboard</span>
+                <span>Dashboard</span>
             </button>
-            <button onClick={() => setActiveTab('analytics')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'analytics' ? 'bg-[#c9a227]/10 text-[#e8c547] border-[#c9a227]/25' : 'text-[#f0ede8]/50 border-transparent hover:bg-[#c9a227]/10'}`}>
+            <button onClick={() => setActiveTab('analytics')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'analytics' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
                 <BarChart2 className="w-5 h-5" />
-                <span className="font-semibold">Analytics</span>
+                <span>Analytics</span>
             </button>
-            <button onClick={() => setActiveTab('settings')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'settings' ? 'bg-[#c9a227]/10 text-[#e8c547] border-[#c9a227]/25' : 'text-[#f0ede8]/50 border-transparent hover:bg-[#c9a227]/10'}`}>
+            <button onClick={() => setActiveTab('settings')} className={`w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl border transition-colors ${activeTab === 'settings' ? 'bg-red-50 text-red-600 border-red-100 font-semibold shadow-sm' : 'text-gray-600 border-transparent hover:bg-gray-50 font-medium'}`}>
                 <Settings className="w-5 h-5" />
-                <span className="font-semibold">Settings</span>
+                <span>Settings</span>
             </button>
-            <button onClick={handleLogout} className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl transition-colors mt-6 text-red-400 hover:bg-red-900/20">
+            <button onClick={handleLogout} className="w-full text-left flex items-center gap-3 px-4 py-3 rounded-xl transition-colors mt-6 text-gray-500 hover:bg-red-50 hover:text-red-600 font-medium">
                 <LogOut className="w-5 h-5" />
-                <span className="font-semibold">Keluar</span>
+                <span>Keluar</span>
             </button>
         </nav>
 
         <div className="p-4 mt-auto">
-            <div className="rounded-xl p-4" style={{background: 'rgba(201,162,39,0.06)', border: '1px solid rgba(201,162,39,0.15)'}}>
+            <div className="rounded-xl p-4 bg-gray-50 border border-gray-200">
                 <div className="flex items-center gap-2 mb-2">
                     <div className={`w-2.5 h-2.5 rounded-full ${isOnline ? 'bg-green-500' : 'bg-red-500'} pulse-dot`}></div>
-                    <span className="text-sm font-medium text-[#f0ede8]/70">{isOnline ? 'Online' : 'Disconnected'}</span>
+                    <span className="text-sm font-medium text-gray-600">{isOnline ? 'Sistem Online' : 'Terputus'}</span>
                 </div>
             </div>
         </div>
@@ -276,9 +273,15 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
-        <header className="mb-8">
-            <h2 className="text-2xl font-bold" style={{color: '#e8c547'}}>System Overview</h2>
-            <p className="text-gray-400 text-sm mt-1">Real-time performance metrics via Firebase</p>
+        <header className="mb-8 flex justify-between items-end">
+            <div>
+                <h2 className="text-2xl font-bold text-gray-900">OptiVolt Controller Overview</h2>
+                <p className="text-gray-500 text-sm mt-1">Real-time performance metrics via Firebase</p>
+            </div>
+            {/* Logo on top right just as an aesthetic touch */}
+            <div className="hidden md:block opacity-10">
+                <img src="/logo.jpg" alt="Watermark" className="w-24 h-24 grayscale" />
+            </div>
         </header>
 
         {activeTab === 'dashboard' && (
@@ -286,19 +289,19 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 {/* Solar Power */}
                 <div className="glass-card p-6 relative overflow-hidden group">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-yellow-500"></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-amber-500"></div>
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <p className="text-gray-400 font-medium text-sm">Solar Power</p>
-                            <h3 className="text-3xl font-bold mt-1 metric-value">{tel ? tel.p_plts.toFixed(1) : '--'} <span className="text-lg text-gray-500 ml-1">W</span></h3>
+                            <p className="text-gray-500 font-medium text-sm">Daya Surya (Input)</p>
+                            <h3 className="text-3xl font-bold mt-1 text-gray-900">{tel ? tel.p_plts.toFixed(1) : '--'} <span className="text-lg text-gray-500 ml-1">W</span></h3>
                         </div>
-                        <div className="p-3 bg-yellow-500/10 rounded-xl">
-                            <Zap className="w-6 h-6 text-yellow-500 group-hover:scale-110 transition-transform"/>
+                        <div className="p-3 bg-amber-50 rounded-xl">
+                            <Zap className="w-6 h-6 text-amber-500 group-hover:scale-110 transition-transform"/>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4 text-xs text-gray-400 mt-4 pt-4 border-t border-gray-800/50">
-                        <span className="flex items-center gap-1"><Zap className="w-3 h-3 text-[#c9a227]"/> {tel ? tel.v_plts.toFixed(1) : '--'} V</span>
-                        <span className="flex items-center gap-1"><Activity className="w-3 h-3 text-[#c9a227]"/> {tel ? tel.i_plts.toFixed(2) : '--'} A</span>
+                    <div className="flex items-center gap-4 text-xs text-gray-500 mt-4 pt-4 border-t border-gray-100">
+                        <span className="flex items-center gap-1"><Zap className="w-3 h-3 text-amber-500"/> {tel ? tel.v_plts.toFixed(1) : '--'} V</span>
+                        <span className="flex items-center gap-1"><Activity className="w-3 h-3 text-amber-500"/> {tel ? tel.i_plts.toFixed(2) : '--'} A</span>
                     </div>
                 </div>
 
@@ -307,17 +310,17 @@ export default function Home() {
                     <div className="absolute top-0 left-0 w-full h-1 bg-green-500"></div>
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <p className="text-gray-400 font-medium text-sm">Battery Level</p>
-                            <h3 className="text-3xl font-bold mt-1 metric-value">{tel ? tel.batt_pct.toFixed(0) : '--'} <span className="text-lg text-gray-500 ml-1">%</span></h3>
+                            <p className="text-gray-500 font-medium text-sm">Level Baterai</p>
+                            <h3 className="text-3xl font-bold mt-1 text-gray-900">{tel ? tel.batt_pct.toFixed(0) : '--'} <span className="text-lg text-gray-500 ml-1">%</span></h3>
                         </div>
-                        <div className="p-3 bg-green-500/10 rounded-xl">
+                        <div className="p-3 bg-green-50 rounded-xl">
                             <Battery className="w-6 h-6 text-green-500 group-hover:scale-110 transition-transform"/>
                         </div>
                     </div>
-                    <div className="w-full bg-gray-800 rounded-full h-1.5 mt-4">
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 mt-4">
                         <div className="bg-green-500 h-1.5 rounded-full transition-all" style={{width: `${tel?.batt_pct || 0}%`}}></div>
                     </div>
-                    <p className="text-xs text-gray-400 mt-2 text-right">{tel?.v_out.toFixed(1)}V</p>
+                    <p className="text-xs text-gray-500 mt-2 text-right">{tel?.v_out.toFixed(1)}V</p>
                 </div>
 
                 {/* Output Power */}
@@ -325,14 +328,14 @@ export default function Home() {
                     <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <p className="text-gray-400 font-medium text-sm">Output Power</p>
-                            <h3 className="text-3xl font-bold mt-1 metric-value">{tel ? tel.p_out.toFixed(1) : '--'} <span className="text-lg text-gray-500 ml-1">W</span></h3>
+                            <p className="text-gray-500 font-medium text-sm">Daya Beban (Output)</p>
+                            <h3 className="text-3xl font-bold mt-1 text-gray-900">{tel ? tel.p_out.toFixed(1) : '--'} <span className="text-lg text-gray-500 ml-1">W</span></h3>
                         </div>
-                        <div className="p-3 bg-blue-500/10 rounded-xl">
+                        <div className="p-3 bg-blue-50 rounded-xl">
                             <Zap className="w-6 h-6 text-blue-500 group-hover:scale-110 transition-transform"/>
                         </div>
                     </div>
-                    <div className="flex items-center gap-4 text-xs text-gray-400 mt-4 pt-4 border-t border-gray-800/50">
+                    <div className="flex items-center gap-4 text-xs text-gray-500 mt-4 pt-4 border-t border-gray-100">
                         <span className="flex items-center gap-1"><Zap className="w-3 h-3 text-blue-400"/> {tel ? tel.v_out.toFixed(1) : '--'} V</span>
                         <span className="flex items-center gap-1"><Activity className="w-3 h-3 text-blue-400"/> {tel ? tel.i_out.toFixed(2) : '--'} A</span>
                     </div>
@@ -340,41 +343,41 @@ export default function Home() {
 
                 {/* Efficiency */}
                 <div className="glass-card p-6 relative overflow-hidden group">
-                    <div className="absolute top-0 left-0 w-full h-1 bg-purple-500"></div>
+                    <div className="absolute top-0 left-0 w-full h-1 bg-red-600"></div>
                     <div className="flex justify-between items-start mb-4">
                         <div>
-                            <p className="text-gray-400 font-medium text-sm">MPPT Efficiency</p>
-                            <h3 className="text-3xl font-bold mt-1 metric-value">{tel ? eff.toFixed(1) : '--'} <span className="text-lg text-gray-500 ml-1">%</span></h3>
+                            <p className="text-gray-500 font-medium text-sm">Efisiensi MPPT</p>
+                            <h3 className="text-3xl font-bold mt-1 text-red-600">{tel ? eff.toFixed(1) : '--'} <span className="text-lg text-red-400 ml-1">%</span></h3>
                         </div>
-                        <div className="p-3 bg-purple-500/10 rounded-xl">
-                            <Gauge className="w-6 h-6 text-purple-500 group-hover:scale-110 transition-transform"/>
+                        <div className="p-3 bg-red-50 rounded-xl">
+                            <Gauge className="w-6 h-6 text-red-600 group-hover:scale-110 transition-transform"/>
                         </div>
                     </div>
-                    <div className="w-full bg-gray-800 rounded-full h-1.5 mt-4">
-                        <div className="bg-purple-500 h-1.5 rounded-full transition-all" style={{width: `${eff}%`}}></div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 mt-4">
+                        <div className="bg-red-500 h-1.5 rounded-full transition-all" style={{width: `${eff}%`}}></div>
                     </div>
-                    <p className="text-xs text-gray-400 mt-2 text-right">System Loss: {tel ? sysLoss.toFixed(1) : '--'} W</p>
+                    <p className="text-xs text-gray-500 mt-2 text-right">Kehilangan: {tel ? sysLoss.toFixed(1) : '--'} W</p>
                 </div>
             </div>
 
             {/* Remote Load Control (SCADA) */}
-            <div className={`glass-card p-6 mb-8 relative overflow-hidden group border-l-4 transition-colors duration-500 ${tel?.load_status ? 'border-l-[#c9a227]' : 'border-l-gray-800'}`}>
+            <div className={`glass-card p-6 mb-8 relative overflow-hidden group border-l-4 transition-colors duration-500 ${tel?.load_status ? 'border-l-red-600 bg-red-50/30' : 'border-l-gray-300'}`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <div className={`p-4 rounded-2xl transition-colors duration-500 ${tel?.load_status ? 'bg-[#c9a227]/20' : 'bg-gray-800/50'}`}>
-                            <AlertTriangle className={`w-8 h-8 transition-colors duration-500 ${tel?.load_status ? 'text-[#c9a227]' : 'text-gray-500'}`} />
+                        <div className={`p-4 rounded-2xl transition-colors duration-500 ${tel?.load_status ? 'bg-red-100' : 'bg-gray-100'}`}>
+                            <AlertTriangle className={`w-8 h-8 transition-colors duration-500 ${tel?.load_status ? 'text-red-600' : 'text-gray-400'}`} />
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold">Remote Load Control</h3>
-                            <p className={`text-sm mt-1 font-medium transition-colors duration-500 ${tel?.load_status ? 'text-[#e8c547]' : 'text-gray-500'}`}>
-                                Status: {tel?.load_status ? 'ACTIVE' : 'OFF'}
+                            <h3 className="text-xl font-bold text-gray-900">Kontrol Beban Jarak Jauh (Remote Load)</h3>
+                            <p className={`text-sm mt-1 font-medium transition-colors duration-500 ${tel?.load_status ? 'text-red-600' : 'text-gray-500'}`}>
+                                Status saat ini: {tel?.load_status ? 'MENYALA (ACTIVE)' : 'MATI (OFF)'}
                             </p>
                         </div>
                     </div>
                     <div>
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" checked={tel?.load_status || false} onChange={() => handleToggleLoad(tel?.load_status || false)} className="sr-only peer" />
-                            <div className="w-14 h-7 bg-gray-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#c9a227] transition-colors shadow-inner"></div>
+                            <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-red-600 transition-colors shadow-inner"></div>
                         </label>
                     </div>
                 </div>
@@ -383,35 +386,35 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Data Table */}
                 <div className="glass-card p-6 lg:col-span-2 overflow-hidden flex flex-col">
-                    <h3 className="font-semibold text-lg mb-4">System Parameters</h3>
+                    <h3 className="font-semibold text-lg mb-4 text-gray-900">Tabel Parameter Sistem</h3>
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="text-gray-400 text-sm border-b border-gray-800">
+                                <tr className="text-gray-500 text-sm border-b border-gray-200">
                                     <th className="pb-3 font-medium">Parameter</th>
                                     <th className="pb-3 font-medium">Input (PLTS)</th>
-                                    <th className="pb-3 font-medium">Output (Load)</th>
+                                    <th className="pb-3 font-medium">Output (Beban)</th>
                                     <th className="pb-3 font-medium text-right">Status</th>
                                 </tr>
                             </thead>
                             <tbody className="text-sm">
-                                <tr className="border-b border-gray-800/50 hover:bg-gray-800/20 transition-colors">
-                                    <td className="py-4 text-gray-300">Voltage (V)</td>
-                                    <td className="py-4 font-medium">{tel ? tel.v_plts.toFixed(1) : '--'}</td>
-                                    <td className="py-4 font-medium">{tel ? tel.v_out.toFixed(1) : '--'}</td>
-                                    <td className="py-4 text-right"><span className="px-2 py-1 bg-green-500/10 text-green-400 rounded text-xs">Normal</span></td>
+                                <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                    <td className="py-4 text-gray-600">Tegangan (V)</td>
+                                    <td className="py-4 font-semibold text-gray-900">{tel ? tel.v_plts.toFixed(1) : '--'}</td>
+                                    <td className="py-4 font-semibold text-gray-900">{tel ? tel.v_out.toFixed(1) : '--'}</td>
+                                    <td className="py-4 text-right"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-medium">Normal</span></td>
                                 </tr>
-                                <tr className="border-b border-gray-800/50 hover:bg-gray-800/20 transition-colors">
-                                    <td className="py-4 text-gray-300">Current (A)</td>
-                                    <td className="py-4 font-medium">{tel ? tel.i_plts.toFixed(2) : '--'}</td>
-                                    <td className="py-4 font-medium">{tel ? tel.i_out.toFixed(2) : '--'}</td>
-                                    <td className="py-4 text-right"><span className="px-2 py-1 bg-green-500/10 text-green-400 rounded text-xs">Optimal</span></td>
+                                <tr className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                    <td className="py-4 text-gray-600">Arus (A)</td>
+                                    <td className="py-4 font-semibold text-gray-900">{tel ? tel.i_plts.toFixed(2) : '--'}</td>
+                                    <td className="py-4 font-semibold text-gray-900">{tel ? tel.i_out.toFixed(2) : '--'}</td>
+                                    <td className="py-4 text-right"><span className="px-2 py-1 bg-green-100 text-green-700 rounded-md text-xs font-medium">Optimal</span></td>
                                 </tr>
-                                <tr className="hover:bg-gray-800/20 transition-colors">
-                                    <td className="py-4 text-gray-300">Power (W)</td>
-                                    <td className="py-4 font-bold text-[#c9a227]">{tel ? tel.p_plts.toFixed(1) : '--'}</td>
-                                    <td className="py-4 font-bold text-blue-400">{tel ? tel.p_out.toFixed(1) : '--'}</td>
-                                    <td className="py-4 text-right"><span className="px-2 py-1 bg-blue-500/10 text-blue-400 rounded text-xs">Tracking</span></td>
+                                <tr className="hover:bg-gray-50 transition-colors">
+                                    <td className="py-4 text-gray-600">Daya (W)</td>
+                                    <td className="py-4 font-bold text-amber-600">{tel ? tel.p_plts.toFixed(1) : '--'}</td>
+                                    <td className="py-4 font-bold text-blue-600">{tel ? tel.p_out.toFixed(1) : '--'}</td>
+                                    <td className="py-4 text-right"><span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs font-medium">Tracking</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -421,17 +424,17 @@ export default function Home() {
                 {/* Terminal */}
                 <div className="glass-card p-6 flex flex-col h-full max-h-80">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="font-semibold text-lg flex items-center gap-2">
-                            <Terminal className="w-4 h-4 text-gray-400" />
-                            Live Data Feed
+                        <h3 className="font-semibold text-lg flex items-center gap-2 text-gray-900">
+                            <Terminal className="w-5 h-5 text-red-600" />
+                            Log Sistem
                         </h3>
                     </div>
-                    <div className="bg-gray-900/80 rounded-xl p-3 flex-1 overflow-y-auto border border-gray-800/50 font-mono text-xs">
+                    <div className="bg-gray-900 rounded-xl p-3 flex-1 overflow-y-auto font-mono text-xs shadow-inner">
                         <ul className="space-y-2 text-green-400">
                             {logs.map((l, i) => (
-                                <li key={i}><span className="text-gray-500">[{l.time}]</span> {l.msg}</li>
+                                <li key={i}><span className="text-gray-500">[{l.time}]</span> <span className="text-white">{l.msg}</span></li>
                             ))}
-                            {logs.length === 0 && <li className="text-gray-500">Waiting for data...</li>}
+                            {logs.length === 0 && <li className="text-gray-500">Menunggu data...</li>}
                         </ul>
                     </div>
                 </div>
@@ -444,8 +447,8 @@ export default function Home() {
                 {/* Main Area Chart */}
                 <div className="glass-card p-6 lg:col-span-2">
                     <div className="flex justify-between items-center mb-6">
-                        <h3 className="font-semibold text-lg">Power Generation vs Usage</h3>
-                        <span className="text-xs px-2 py-1 bg-gray-800 text-gray-300 rounded-lg">Last 30 updates</span>
+                        <h3 className="font-semibold text-lg text-gray-900">Perbandingan Daya</h3>
+                        <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 font-medium rounded-lg border border-gray-200">Last 30 updates</span>
                     </div>
                     <div className="relative h-96 w-full">
                         <Line data={chartData} options={chartOptions} />
@@ -454,22 +457,22 @@ export default function Home() {
 
                 {/* Doughnut Chart */}
                 <div className="glass-card p-6 flex flex-col">
-                    <h3 className="font-semibold text-lg mb-6">Energy Distribution</h3>
+                    <h3 className="font-semibold text-lg mb-6 text-gray-900">Distribusi Energi</h3>
                     <div className="relative h-64 w-full flex-1 flex justify-center items-center">
                         <Doughnut data={doughnutData} options={doughnutOptions} />
                     </div>
                     <div className="mt-8 space-y-4">
-                        <div className="flex justify-between text-sm border-b border-gray-800 pb-2">
-                            <span className="text-gray-400">Total Generation</span>
-                            <span className="font-bold text-[#c9a227]">{tel ? tel.p_plts.toFixed(1) : '0'} W</span>
+                        <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
+                            <span className="text-gray-600">Total Daya Masuk</span>
+                            <span className="font-bold text-red-600">{tel ? tel.p_plts.toFixed(1) : '0'} W</span>
                         </div>
-                        <div className="flex justify-between text-sm border-b border-gray-800 pb-2">
-                            <span className="text-gray-400">Output Usage</span>
-                            <span className="font-bold text-blue-400">{tel ? tel.p_out.toFixed(1) : '0'} W</span>
+                        <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
+                            <span className="text-gray-600">Penggunaan Beban</span>
+                            <span className="font-bold text-blue-600">{tel ? tel.p_out.toFixed(1) : '0'} W</span>
                         </div>
-                        <div className="flex justify-between text-sm border-b border-gray-800 pb-2">
-                            <span className="text-gray-400">System Losses</span>
-                            <span className="font-bold text-red-400">{tel ? sysLoss.toFixed(1) : '0'} W</span>
+                        <div className="flex justify-between text-sm border-b border-gray-100 pb-2">
+                            <span className="text-gray-600">Kehilangan (Loss)</span>
+                            <span className="font-bold text-gray-400">{tel ? sysLoss.toFixed(1) : '0'} W</span>
                         </div>
                     </div>
                 </div>
@@ -479,88 +482,88 @@ export default function Home() {
         {activeTab === 'settings' && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
                 {/* Current Settings */}
-                <div className="glass-card p-8">
-                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-800">
-                        <div className="p-3 bg-blue-500/10 rounded-xl">
-                            <Info className="w-8 h-8 text-blue-400" />
+                <div className="glass-card p-8 bg-white">
+                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+                        <div className="p-3 bg-red-50 border border-red-100 rounded-xl">
+                            <Info className="w-8 h-8 text-red-600" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold">Current Configuration</h3>
-                            <p className="text-sm text-gray-400">Settings currently active on ESP32</p>
+                            <h3 className="text-xl font-bold text-gray-900">Konfigurasi Saat Ini</h3>
+                            <p className="text-sm text-gray-500">Pengaturan yang sedang aktif di perangkat ESP32</p>
                         </div>
                     </div>
                     <div className="space-y-4">
-                        <div className="flex justify-between items-center py-3 border-b border-gray-800/50">
-                            <span className="text-gray-400">Max PV Voltage</span>
-                            <span className="font-bold text-white text-lg">{set ? set.sol_vmax : '--'} V</span>
+                        <div className="flex justify-between items-center py-3 border-b border-gray-50">
+                            <span className="text-gray-500">Max PV Voltage</span>
+                            <span className="font-bold text-gray-900 text-lg">{set ? set.sol_vmax : '--'} V</span>
                         </div>
-                        <div className="flex justify-between items-center py-3 border-b border-gray-800/50">
-                            <span className="text-gray-400">Max PV Current</span>
-                            <span className="font-bold text-white text-lg">{set ? set.sol_imax : '--'} A</span>
+                        <div className="flex justify-between items-center py-3 border-b border-gray-50">
+                            <span className="text-gray-500">Max PV Current</span>
+                            <span className="font-bold text-gray-900 text-lg">{set ? set.sol_imax : '--'} A</span>
                         </div>
-                        <div className="flex justify-between items-center py-3 border-b border-gray-800/50">
-                            <span className="text-gray-400">Battery Type</span>
-                            <span className="font-bold text-white text-lg">{set ? (set.bat_type === 0 ? 'SLA' : set.bat_type === 1 ? 'Li-ion' : 'LiFePO4') : '--'}</span>
+                        <div className="flex justify-between items-center py-3 border-b border-gray-50">
+                            <span className="text-gray-500">Battery Type</span>
+                            <span className="font-bold text-gray-900 text-lg px-3 py-1 bg-gray-100 rounded-full">{set ? (set.bat_type === 0 ? 'SLA / Lead Acid' : set.bat_type === 1 ? 'Li-ion' : 'LiFePO4') : '--'}</span>
                         </div>
-                        <div className="flex justify-between items-center py-3 border-b border-gray-800/50">
-                            <span className="text-gray-400">System Voltage</span>
-                            <span className="font-bold text-white text-lg">{set ? set.sys_volt : '--'} V</span>
+                        <div className="flex justify-between items-center py-3 border-b border-gray-50">
+                            <span className="text-gray-500">System Voltage</span>
+                            <span className="font-bold text-gray-900 text-lg">{set ? set.sys_volt : '--'} V</span>
                         </div>
-                        <div className="flex justify-between items-center py-3 border-b border-gray-800/50">
-                            <span className="text-gray-400">Battery Capacity</span>
-                            <span className="font-bold text-white text-lg">{set ? set.bat_cap : '--'} Ah</span>
+                        <div className="flex justify-between items-center py-3 border-b border-gray-50">
+                            <span className="text-gray-500">Battery Capacity</span>
+                            <span className="font-bold text-gray-900 text-lg">{set ? set.bat_cap : '--'} Ah</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Update Settings Form */}
                 <div className="glass-card p-8">
-                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-800">
-                        <div className="p-3 bg-orange-500/10 rounded-xl">
-                            <Edit3 className="w-8 h-8 text-orange-400" />
+                    <div className="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+                        <div className="p-3 bg-amber-50 rounded-xl border border-amber-100">
+                            <Edit3 className="w-8 h-8 text-amber-600" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold">Update Settings</h3>
-                            <p className="text-sm text-gray-400">Send new configuration to ESP32</p>
+                            <h3 className="text-xl font-bold text-gray-900">Ubah Pengaturan</h3>
+                            <p className="text-sm text-gray-500">Kirim konfigurasi baru ke perangkat keras</p>
                         </div>
                     </div>
                     <form onSubmit={saveSettings}>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Max PV Voltage (V)</label>
-                                <input type="number" min="18" max="50" required value={solVmax} onChange={e => setSolVmax(Number(e.target.value))} className="w-full bg-gray-900/50 border border-gray-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#c9a227]" />
+                                <label className="block text-sm text-gray-600 font-medium mb-1">Max PV Voltage (V)</label>
+                                <input type="number" min="18" max="50" required value={solVmax} onChange={e => setSolVmax(Number(e.target.value))} />
                             </div>
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Max PV Current (A)</label>
-                                <input type="number" min="1" max="20" required value={solImax} onChange={e => setSolImax(Number(e.target.value))} className="w-full bg-gray-900/50 border border-gray-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#c9a227]" />
+                                <label className="block text-sm text-gray-600 font-medium mb-1">Max PV Current (A)</label>
+                                <input type="number" min="1" max="20" required value={solImax} onChange={e => setSolImax(Number(e.target.value))} />
                             </div>
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Battery Chemistry</label>
-                                <select value={batType} onChange={e => setBatType(Number(e.target.value))} required className="w-full bg-gray-900/50 border border-gray-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#c9a227]">
+                                <label className="block text-sm text-gray-600 font-medium mb-1">Jenis Baterai</label>
+                                <select value={batType} onChange={e => setBatType(Number(e.target.value))} required>
                                     <option value="0">SLA / Lead Acid</option>
                                     <option value="1">Li-ion</option>
                                     <option value="2">LiFePO4</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">System Voltage</label>
-                                <select value={sysVolt} onChange={e => setSysVolt(Number(e.target.value))} required className="w-full bg-gray-900/50 border border-gray-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#c9a227]">
+                                <label className="block text-sm text-gray-600 font-medium mb-1">Tegangan Sistem</label>
+                                <select value={sysVolt} onChange={e => setSysVolt(Number(e.target.value))} required>
                                     <option value="12">12V</option>
                                     <option value="24">24V</option>
                                 </select>
                             </div>
                             <div>
-                                <label className="block text-sm text-gray-400 mb-1">Capacity (Ah)</label>
-                                <input type="number" min="5" max="200" step="5" required value={batCap} onChange={e => setBatCap(Number(e.target.value))} className="w-full bg-gray-900/50 border border-gray-800 rounded-lg p-3 text-white focus:outline-none focus:border-[#c9a227]" />
+                                <label className="block text-sm text-gray-600 font-medium mb-1">Kapasitas (Ah)</label>
+                                <input type="number" min="5" max="200" step="5" required value={batCap} onChange={e => setBatCap(Number(e.target.value))} />
                             </div>
                         </div>
 
-                        <div className="pt-4 border-t border-gray-800 flex flex-col gap-4">
-                            <button type="submit" className="w-full text-black font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2" style={{background: 'linear-gradient(135deg, #c9a227, #a07c1a)', border: '1px solid #f0d060', boxShadow: '0 4px 15px rgba(201,162,39,0.3)'}}>
-                                <Zap className="w-4 h-4" /> Apply Settings to ESP32
+                        <div className="pt-4 border-t border-gray-100 flex flex-col gap-4">
+                            <button type="submit" className="w-full text-white font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 shadow-md hover:shadow-lg">
+                                <Zap className="w-4 h-4" /> Terapkan ke ESP32
                             </button>
-                            <span className="text-sm text-gray-400 text-center block">
-                                {settingsStatus === 'Status: Synchronized with ESP32' && <CheckCircle className="w-4 h-4 text-green-400 inline-block align-middle mr-1" />}
+                            <span className="text-sm text-gray-500 text-center block font-medium">
+                                {settingsStatus === 'Status: Synchronized with ESP32' && <CheckCircle className="w-4 h-4 text-green-500 inline-block align-middle mr-1" />}
                                 <span className="align-middle">{settingsStatus}</span>
                             </span>
                         </div>
@@ -568,24 +571,24 @@ export default function Home() {
                 </div>
 
                 {/* Firmware Update (OTA) Form */}
-                <div className="glass-panel rounded-2xl p-6 md:p-8 col-span-1 lg:col-span-2 mt-2">
+                <div className="glass-card rounded-2xl p-6 md:p-8 col-span-1 lg:col-span-2 mt-2 bg-gray-50">
                     <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-purple-500/10 rounded-xl">
-                            <Cpu className="w-6 h-6 text-purple-400" />
+                        <div className="p-3 bg-purple-100 rounded-xl">
+                            <Cpu className="w-6 h-6 text-purple-600" />
                         </div>
                         <div>
-                            <h3 className="text-xl font-bold">Remote Firmware Update (OTA)</h3>
-                            <p className="text-sm text-gray-400">Upload .bin file to flash ESP32 over WiFi</p>
+                            <h3 className="text-xl font-bold text-gray-900">Update Firmware (OTA)</h3>
+                            <p className="text-sm text-gray-500">Unggah file .bin untuk mem-flash ESP32 via WiFi</p>
                         </div>
                     </div>
 
                     <div className="flex flex-col gap-4 max-w-xl">
-                        <input type="file" accept=".bin" className="block w-full text-sm text-gray-400 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-gray-800 file:text-white hover:file:bg-gray-700 transition-colors cursor-pointer border border-gray-800 rounded-xl" />
-                        <button onClick={() => alert("Note: Because this dashboard is now hosted online on Vercel/Firebase, OTA updates require the ESP32 to download the .bin from Firebase Storage. This feature will be available in the next firmware upgrade!")} className="w-full text-black font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2" style={{background: 'linear-gradient(135deg, #c9a227, #a07c1a)', border: '1px solid #f0d060', boxShadow: '0 4px 15px rgba(201,162,39,0.3)'}}>
-                            <Zap className="w-4 h-4" /> Flash to ESP32
+                        <input type="file" accept=".bin" className="block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-white file:text-gray-900 hover:file:bg-gray-100 transition-colors cursor-pointer border border-gray-300 rounded-xl bg-white shadow-sm" />
+                        <button onClick={() => alert("Note: Because this dashboard is now hosted online on Vercel/Firebase, OTA updates require the ESP32 to download the .bin from Firebase Storage. This feature will be available in the next firmware upgrade!")} className="w-full text-gray-700 font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm">
+                            <Cpu className="w-4 h-4" /> Upload Firmware Baru
                         </button>
-                        <span className="text-sm text-gray-400 text-center block mt-2">
-                            <span className="align-middle">Status: Ready</span>
+                        <span className="text-sm text-gray-500 text-center block mt-2 font-medium">
+                            <span className="align-middle">Status: Menunggu File</span>
                         </span>
                     </div>
                 </div>
