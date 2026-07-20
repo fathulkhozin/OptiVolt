@@ -296,7 +296,6 @@ export default function Home() {
                 </button>
                 <div>
                     <h2 className="text-xl md:text-2xl font-bold text-gray-900">OptiVolt Controller Overview</h2>
-                    <p className="text-gray-500 text-sm mt-1">Real-time performance metrics via Firebase</p>
                 </div>
             </div>
             {/* Logo on top right just as an aesthetic touch */}
