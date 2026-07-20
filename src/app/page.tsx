@@ -61,12 +61,17 @@ export default function Home() {
     const fbService = FirebaseService.getInstance();
     
     const unsubTelemetry = fbService.listenToTelemetry((updatedDevice) => {
-      const dev = new OptiVoltDevice();
       const t = updatedDevice.getTelemetry();
-      if(t) dev.setTelemetry(t);
-      const s = updatedDevice.getSettings();
-      if(s) dev.setSettings(s);
-      setDevice(dev);
+      
+      setDevice(prev => {
+          const newDev = new OptiVoltDevice();
+          if(t) newDev.setTelemetry(t);
+          if(prev) {
+              const s = prev.getSettings();
+              if(s) newDev.setSettings(s);
+          }
+          return newDev;
+      });
 
       if (t) {
           const now = new Date();
