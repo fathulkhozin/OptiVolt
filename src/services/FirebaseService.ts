@@ -120,6 +120,7 @@ export class FirebaseService {
     /**
      * Fetches all historical data points
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public async getHistoryData(): Promise<any> {
         if (!this.db) return null;
         const historyRef = ref(this.db, 'optivolt/history');

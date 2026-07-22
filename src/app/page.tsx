@@ -55,6 +55,7 @@ export default function Home() {
 
   useEffect(() => {
     if (typeof window !== 'undefined' && localStorage.getItem('mppt_token')) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setIsLoggedIn(true);
     }
 
@@ -242,7 +243,7 @@ export default function Home() {
   const set = device?.getSettings();
   const eff = device?.getEfficiency() || 0;
   const sysLoss = tel ? (tel.p_plts - tel.p_out) : 0;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/purity
   const isOnline = tel && (Date.now() - tel.timestamp < 10000); 
 
   const currentLoadState = optimisticLoad !== null ? optimisticLoad : (tel?.load_status || false);
@@ -273,6 +274,7 @@ export default function Home() {
         legend: { labels: { color: '#374151' } },
         tooltip: {
             callbacks: {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 label: function(context: any) {
                     return context.dataset.label + ': ' + Math.round(context.parsed.y) + ' W';
                 }

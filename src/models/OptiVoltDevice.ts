@@ -29,6 +29,7 @@ export class OptiVoltDevice {
     constructor() {}
 
     // Encapsulation: Setters with basic validation
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public setTelemetry(data: any): void {
         if (!data) return;
         this.telemetry = {
@@ -44,6 +45,7 @@ export class OptiVoltDevice {
         };
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     public setSettings(data: any): void {
         if (!data) return;
         this.settings = {
