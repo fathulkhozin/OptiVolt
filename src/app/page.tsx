@@ -239,7 +239,6 @@ export default function Home() {
     );
   }
 
-  const tel = device?.getTelemetry();
   const set = device?.getSettings();
   const eff = device?.getEfficiency() || 0;
   const sysLoss = tel ? (tel.p_plts - tel.p_out) : 0;
