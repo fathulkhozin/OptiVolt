@@ -53,6 +53,7 @@ export default function Home() {
   const [sheetRecordActive, setSheetRecordActive] = useState(false);
   const [sheetStartTime, setSheetStartTime] = useState("06:00");
   const [sheetEndTime, setSheetEndTime] = useState("18:00");
+  const [sheetRecordStatus, setSheetRecordStatus] = useState("Belum ada rekaman");
   const [settingsStatus, setSettingsStatus] = useState('Status: Waiting...');
 
   useEffect(() => {
@@ -103,6 +104,7 @@ export default function Home() {
             if(s.sheet_record_active !== undefined) setSheetRecordActive(s.sheet_record_active);
             if(s.sheet_start_time) setSheetStartTime(s.sheet_start_time);
             if(s.sheet_end_time) setSheetEndTime(s.sheet_end_time);
+            if(s.sheet_record_status) setSheetRecordStatus(s.sheet_record_status);
         }
         setDevice(prev => {
             if(!prev) return updatedDevice;
@@ -614,6 +616,11 @@ export default function Home() {
                                     <label className="block text-sm text-gray-600 font-medium mb-1">Selesai Rekam (Jam)</label>
                                     <input type="time" required value={sheetEndTime} onChange={e => setSheetEndTime(e.target.value)} disabled={!sheetRecordActive} className="w-full" />
                                 </div>
+                            </div>
+                            
+                            <div className="mt-2 bg-gray-50 border border-gray-100 rounded-lg p-3">
+                                <span className="text-sm font-medium text-gray-700">Status Terakhir: </span>
+                                <span className="text-sm text-gray-600">{sheetRecordStatus}</span>
                             </div>
                         </div>
 
