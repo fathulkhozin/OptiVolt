@@ -196,6 +196,15 @@ export default function Home() {
       setSettingsStatus('Status: Synchronized with ESP32');
   };
 
+  const tel = device?.getTelemetry();
+
+  // Clear optimistic state when telemetry catches up
+  useEffect(() => {
+    if (optimisticLoad !== null && tel && tel.load_status === optimisticLoad) {
+      setOptimisticLoad(null);
+    }
+  }, [tel?.load_status, optimisticLoad, tel]);
+
   if (!isLoggedIn) {
     return (
       <div id="login-screen" className="fixed inset-0 flex items-center justify-center bg-gray-50 backdrop-blur-md z-50">
@@ -235,13 +244,6 @@ export default function Home() {
   const sysLoss = tel ? (tel.p_plts - tel.p_out) : 0;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const isOnline = tel && (Date.now() - tel.timestamp < 10000); 
-
-  // Clear optimistic state when telemetry catches up
-  useEffect(() => {
-    if (optimisticLoad !== null && tel && tel.load_status === optimisticLoad) {
-      setOptimisticLoad(null);
-    }
-  }, [tel?.load_status, optimisticLoad, tel]);
 
   const currentLoadState = optimisticLoad !== null ? optimisticLoad : (tel?.load_status || false);
   const isToggleLoading = optimisticLoad !== null;
