@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FirebaseService } from '../services/FirebaseService';
 import { OptiVoltDevice } from '../models/OptiVoltDevice';
-import { LayoutDashboard, BarChart2, Settings, LogOut, Zap, Battery, AlertTriangle, Activity, Gauge, Terminal, Info, Edit3, Cpu, CheckCircle, Menu, X, Database } from 'lucide-react';
+import { LayoutDashboard, BarChart2, Settings, LogOut, Zap, Battery, AlertTriangle, Activity, Gauge, Terminal, Info, Edit3, Cpu, CheckCircle, Menu, X, Database, Download, Trash2 } from 'lucide-react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -50,10 +50,6 @@ export default function Home() {
   const [batType, setBatType] = useState(0);
   const [sysVolt, setSysVolt] = useState(12);
   const [batCap, setBatCap] = useState(50);
-  const [sheetRecordActive, setSheetRecordActive] = useState(false);
-  const [sheetStartTime, setSheetStartTime] = useState("06:00");
-  const [sheetEndTime, setSheetEndTime] = useState("18:00");
-  const [sheetRecordStatus, setSheetRecordStatus] = useState("Belum ada rekaman");
   const [settingsStatus, setSettingsStatus] = useState('Status: Waiting...');
 
   useEffect(() => {
@@ -101,10 +97,6 @@ export default function Home() {
             setBatType(s.bat_type);
             setSysVolt(s.sys_volt);
             setBatCap(s.bat_cap);
-            if(s.sheet_record_active !== undefined) setSheetRecordActive(s.sheet_record_active);
-            if(s.sheet_start_time) setSheetStartTime(s.sheet_start_time);
-            if(s.sheet_end_time) setSheetEndTime(s.sheet_end_time);
-            if(s.sheet_record_status) setSheetRecordStatus(s.sheet_record_status);
         }
         setDevice(prev => {
             if(!prev) return updatedDevice;
@@ -137,6 +129,52 @@ export default function Home() {
       await fbService.toggleLoad(checked); 
   };
 
+  const handleDownloadCsv = async () => {
+    try {
+        const fbService = FirebaseService.getInstance();
+        const data = await fbService.getHistoryData();
+        if (!data) {
+            alert('Tidak ada riwayat data ditemukan.');
+            return;
+        }
+        
+        let csv = 'Time,V_PLTS,I_PLTS,P_PLTS,V_OUT,I_OUT,P_OUT,BATT_PCT,LOAD_STATUS\n';
+        const keys = Object.keys(data).sort();
+        for (const key of keys) {
+            const row = data[key];
+            const date = new Date(row.timestamp);
+            const timeStr = date.toISOString().replace(/T/, ' ').replace(/\..+/, '');
+            csv += `${timeStr},${row.v_plts},${row.i_plts},${row.p_plts},${row.v_out},${row.i_out},${row.p_out},${row.batt_pct},${row.load_status}\n`;
+        }
+        
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('hidden', '');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `optivolt_history_${new Date().getTime()}.csv`);
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    } catch (e) {
+        console.error("Error downloading CSV:", e);
+        alert('Gagal mendownload CSV.');
+    }
+  };
+
+  const handleClearHistory = async () => {
+      if(confirm('Yakin ingin menghapus seluruh riwayat data? Aksi ini tidak dapat dibatalkan dan penting untuk mencegah memori penuh.')) {
+          try {
+              const fbService = FirebaseService.getInstance();
+              await fbService.clearHistoryData();
+              alert('Riwayat berhasil dihapus.');
+          } catch(e) {
+              console.error(e);
+              alert('Gagal menghapus riwayat.');
+          }
+      }
+  };
+
   const saveSettings = async (e: React.FormEvent) => {
       e.preventDefault();
       setSettingsStatus('Status: Updating...');
@@ -146,10 +184,7 @@ export default function Home() {
           sol_imax: solImax,
           bat_type: batType,
           sys_volt: sysVolt,
-          bat_cap: batCap,
-          sheet_record_active: sheetRecordActive,
-          sheet_start_time: sheetStartTime,
-          sheet_end_time: sheetEndTime
+          bat_cap: batCap
       });
       setSettingsStatus('Status: Synchronized with ESP32');
   };
@@ -507,6 +542,30 @@ export default function Home() {
                         </div>
                     </div>
                 </div>
+
+                {/* Data Export Section */}
+                <div className="glass-card p-6 lg:col-span-3">
+                    <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-100">
+                        <div className="p-3 bg-indigo-50 border border-indigo-100 rounded-xl">
+                            <Database className="w-6 h-6 text-indigo-600" />
+                        </div>
+                        <div>
+                            <h3 className="text-xl font-bold text-gray-900">Manajemen Data Riwayat</h3>
+                            <p className="text-sm text-gray-500">Unduh laporan dalam format CSV (Excel) dan hapus riwayat berkala.</p>
+                        </div>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-4 mt-6">
+                        <button onClick={handleDownloadCsv} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors">
+                            <Download className="w-5 h-5" /> Download Laporan CSV
+                        </button>
+                        <button onClick={handleClearHistory} className="flex-1 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-colors">
+                            <Trash2 className="w-5 h-5" /> Hapus Semua Riwayat
+                        </button>
+                    </div>
+                    <p className="text-xs text-gray-400 text-center mt-4">
+                        Data direkam setiap 3 detik. Pastikan Anda rajin menghapus riwayat maksimal 1 bulan sekali agar browser tidak berat saat proses pengunduhan.
+                    </p>
+                </div>
             </div>
         )}
 
@@ -586,31 +645,6 @@ export default function Home() {
                             <div>
                                 <label className="block text-sm text-gray-600 font-medium mb-1">Kapasitas (Ah)</label>
                                 <input type="number" min="5" max="200" step="5" required value={batCap} onChange={e => setBatCap(Number(e.target.value))} />
-                            </div>
-                        </div>
-
-                        <div className="pt-6 mt-4 border-t border-gray-100">
-                            <div className="flex items-center gap-4 mb-4">
-                                <div className="p-3 bg-green-100 rounded-xl">
-                                    <Database className="w-6 h-6 text-green-600" />
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-gray-900">Integrasi Google Sheets</h3>
-                                    <p className="text-sm text-gray-500">Rekam data telemetri otomatis ke cloud via Apps Script</p>
-                                </div>
-                            </div>
-                            
-                            <div className="flex items-center justify-between gap-4 mb-6 bg-white p-4 rounded-xl border border-gray-100">
-                                <label className="text-sm text-gray-600 font-medium">Rekam otomatis saat MPPT aktif (Ada sinar matahari)</label>
-                                <label className="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" className="sr-only peer" checked={sheetRecordActive} onChange={(e) => setSheetRecordActive(e.target.checked)} />
-                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                                </label>
-                            </div>
-                            
-                            <div className="mt-2 bg-gray-50 border border-gray-100 rounded-lg p-3">
-                                <span className="text-sm font-medium text-gray-700">Status Terakhir: </span>
-                                <span className="text-sm text-gray-600">{sheetRecordStatus}</span>
                             </div>
                         </div>
 

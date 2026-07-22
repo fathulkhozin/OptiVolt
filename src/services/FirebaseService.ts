@@ -5,6 +5,7 @@ import {
     onValue, 
     set, 
     update,
+    get,
     Database 
 } from 'firebase/database';
 import { OptiVoltDevice, SettingsData } from '../models/OptiVoltDevice';
