@@ -237,10 +237,27 @@ export default function Home() {
     },
     scales: {
         x: { display: false },
-        y: { grid: { color: 'rgba(0, 0, 0, 0.05)' }, border: { dash: [4, 4] }, ticks: { color: 'rgba(0, 0, 0, 0.5)' } }
+        y: { 
+            grid: { color: 'rgba(0, 0, 0, 0.05)' }, 
+            border: { dash: [4, 4] }, 
+            ticks: { 
+                color: 'rgba(0, 0, 0, 0.5)',
+                stepSize: 10,
+                precision: 0
+            },
+            suggestedMin: 0,
+            suggestedMax: 40
+        }
     },
     plugins: {
-        legend: { labels: { color: '#374151' } }
+        legend: { labels: { color: '#374151' } },
+        tooltip: {
+            callbacks: {
+                label: function(context: any) {
+                    return context.dataset.label + ': ' + Math.round(context.parsed.y) + ' W';
+                }
+            }
+        }
     }
   };
 
