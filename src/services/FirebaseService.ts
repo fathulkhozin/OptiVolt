@@ -116,4 +116,23 @@ export class FirebaseService {
             timestamp: Date.now()
         });
     }
+
+    /**
+     * Fetches all historical data points
+     */
+    public async getHistoryData(): Promise<any> {
+        if (!this.db) return null;
+        const historyRef = ref(this.db, 'optivolt/history');
+        const snapshot = await get(historyRef);
+        return snapshot.val();
+    }
+
+    /**
+     * Clears all historical data points to free up space
+     */
+    public async clearHistoryData(): Promise<void> {
+        if (!this.db) return;
+        const historyRef = ref(this.db, 'optivolt/history');
+        await set(historyRef, null);
+    }
 }
