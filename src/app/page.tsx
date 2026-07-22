@@ -600,22 +600,12 @@ export default function Home() {
                                 </div>
                             </div>
                             
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
-                                <div className="flex items-center justify-between sm:justify-start gap-4">
-                                    <label className="text-sm text-gray-600 font-medium">Aktifkan Rekaman</label>
-                                    <label className="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" className="sr-only peer" checked={sheetRecordActive} onChange={(e) => setSheetRecordActive(e.target.checked)} />
-                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
-                                    </label>
-                                </div>
-                                <div>
-                                    <label className="block text-sm text-gray-600 font-medium mb-1">Mulai Rekam (Jam)</label>
-                                    <input type="time" required value={sheetStartTime} onChange={e => setSheetStartTime(e.target.value)} disabled={!sheetRecordActive} className="w-full" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm text-gray-600 font-medium mb-1">Selesai Rekam (Jam)</label>
-                                    <input type="time" required value={sheetEndTime} onChange={e => setSheetEndTime(e.target.value)} disabled={!sheetRecordActive} className="w-full" />
-                                </div>
+                            <div className="flex items-center justify-between gap-4 mb-6 bg-white p-4 rounded-xl border border-gray-100">
+                                <label className="text-sm text-gray-600 font-medium">Rekam otomatis saat MPPT aktif (Ada sinar matahari)</label>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" className="sr-only peer" checked={sheetRecordActive} onChange={(e) => setSheetRecordActive(e.target.checked)} />
+                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                                </label>
                             </div>
                             
                             <div className="mt-2 bg-gray-50 border border-gray-100 rounded-lg p-3">
