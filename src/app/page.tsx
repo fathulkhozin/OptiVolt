@@ -37,6 +37,7 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loginError, setLoginError] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [optimisticLoad, setOptimisticLoad] = useState<boolean | null>(null);
   
   // Historical data for charts
   const [historyLabels, setHistoryLabels] = useState<string[]>([]);
@@ -125,8 +126,14 @@ export default function Home() {
   };
 
   const handleToggleLoad = async (checked: boolean) => {
+      setOptimisticLoad(!checked);
       const fbService = FirebaseService.getInstance();
       await fbService.toggleLoad(checked); 
+      
+      // Fallback: clear optimistic state after 5 seconds if no response from hardware
+      setTimeout(() => {
+          setOptimisticLoad((prev) => prev !== null ? null : prev);
+      }, 5000);
   };
 
   const handleDownloadCsv = async () => {
@@ -226,7 +233,18 @@ export default function Home() {
   const set = device?.getSettings();
   const eff = device?.getEfficiency() || 0;
   const sysLoss = tel ? (tel.p_plts - tel.p_out) : 0;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const isOnline = tel && (Date.now() - tel.timestamp < 10000); 
+
+  // Clear optimistic state when telemetry catches up
+  useEffect(() => {
+    if (optimisticLoad !== null && tel && tel.load_status === optimisticLoad) {
+      setOptimisticLoad(null);
+    }
+  }, [tel?.load_status, optimisticLoad, tel]);
+
+  const currentLoadState = optimisticLoad !== null ? optimisticLoad : (tel?.load_status || false);
+  const isToggleLoading = optimisticLoad !== null;
 
   const chartOptions = {
     responsive: true,
@@ -444,22 +462,22 @@ export default function Home() {
             </div>
 
             {/* Remote Load Control (SCADA) */}
-            <div className={`glass-card p-6 mb-8 relative overflow-hidden group border-l-4 transition-colors duration-500 ${tel?.load_status ? 'border-l-red-600 bg-red-50/30' : 'border-l-gray-300'}`}>
+            <div className={`glass-card p-6 mb-8 relative overflow-hidden group border-l-4 transition-colors duration-500 ${currentLoadState ? 'border-l-red-600 bg-red-50/30' : 'border-l-gray-300'}`}>
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <div className={`p-4 rounded-2xl transition-colors duration-500 ${tel?.load_status ? 'bg-red-100' : 'bg-gray-100'}`}>
-                            <AlertTriangle className={`w-8 h-8 transition-colors duration-500 ${tel?.load_status ? 'text-red-600' : 'text-gray-400'}`} />
+                        <div className={`p-4 rounded-2xl transition-colors duration-500 ${currentLoadState ? 'bg-red-100' : 'bg-gray-100'}`}>
+                            <AlertTriangle className={`w-8 h-8 transition-colors duration-500 ${currentLoadState ? 'text-red-600' : 'text-gray-400'}`} />
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-gray-900">Kontrol Beban Jarak Jauh (Remote Load)</h3>
-                            <p className={`text-sm mt-1 font-medium transition-colors duration-500 ${tel?.load_status ? 'text-red-600' : 'text-gray-500'}`}>
-                                Status saat ini: {tel?.load_status ? 'MENYALA (ACTIVE)' : 'MATI (OFF)'}
+                            <p className={`text-sm mt-1 font-medium transition-colors duration-500 ${currentLoadState ? 'text-red-600' : 'text-gray-500'}`}>
+                                Status saat ini: {isToggleLoading ? 'MENUNGGU HARDWARE...' : (currentLoadState ? 'MENYALA (ACTIVE)' : 'MATI (OFF)')}
                             </p>
                         </div>
                     </div>
                     <div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" checked={tel?.load_status || false} onChange={() => handleToggleLoad(tel?.load_status || false)} className="sr-only peer" />
+                        <label className={`relative inline-flex items-center ${isToggleLoading ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}>
+                            <input type="checkbox" disabled={isToggleLoading} checked={currentLoadState} onChange={() => handleToggleLoad(currentLoadState)} className="sr-only peer" />
                             <div className="w-14 h-7 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-red-600 transition-colors shadow-inner"></div>
                         </label>
                     </div>
