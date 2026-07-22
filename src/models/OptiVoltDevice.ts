@@ -16,6 +16,9 @@ export interface SettingsData {
     bat_type: number;
     sys_volt: number;
     bat_cap: number;
+    sheet_record_active: boolean;
+    sheet_start_time: string;
+    sheet_end_time: string;
 }
 
 /**
@@ -51,7 +54,10 @@ export class OptiVoltDevice {
             sol_imax: parseInt(data.sol_imax) || 5,
             bat_type: parseInt(data.bat_type) || 0,
             sys_volt: parseInt(data.sys_volt) || 12,
-            bat_cap: parseInt(data.bat_cap) || 50
+            bat_cap: parseInt(data.bat_cap) || 50,
+            sheet_record_active: data.sheet_record_active === true || data.sheet_record_active === 'true',
+            sheet_start_time: data.sheet_start_time || "06:00",
+            sheet_end_time: data.sheet_end_time || "18:00"
         };
     }
 

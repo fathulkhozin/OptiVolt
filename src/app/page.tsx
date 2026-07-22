@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { FirebaseService } from '../services/FirebaseService';
 import { OptiVoltDevice } from '../models/OptiVoltDevice';
-import { LayoutDashboard, BarChart2, Settings, LogOut, Zap, Battery, AlertTriangle, Activity, Gauge, Terminal, Info, Edit3, Cpu, CheckCircle, Menu, X } from 'lucide-react';
+import { LayoutDashboard, BarChart2, Settings, LogOut, Zap, Battery, AlertTriangle, Activity, Gauge, Terminal, Info, Edit3, Cpu, CheckCircle, Menu, X, Database } from 'lucide-react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -50,6 +50,9 @@ export default function Home() {
   const [batType, setBatType] = useState(0);
   const [sysVolt, setSysVolt] = useState(12);
   const [batCap, setBatCap] = useState(50);
+  const [sheetRecordActive, setSheetRecordActive] = useState(false);
+  const [sheetStartTime, setSheetStartTime] = useState("06:00");
+  const [sheetEndTime, setSheetEndTime] = useState("18:00");
   const [settingsStatus, setSettingsStatus] = useState('Status: Waiting...');
 
   useEffect(() => {
@@ -97,6 +100,9 @@ export default function Home() {
             setBatType(s.bat_type);
             setSysVolt(s.sys_volt);
             setBatCap(s.bat_cap);
+            if(s.sheet_record_active !== undefined) setSheetRecordActive(s.sheet_record_active);
+            if(s.sheet_start_time) setSheetStartTime(s.sheet_start_time);
+            if(s.sheet_end_time) setSheetEndTime(s.sheet_end_time);
         }
         setDevice(prev => {
             if(!prev) return updatedDevice;
@@ -138,7 +144,10 @@ export default function Home() {
           sol_imax: solImax,
           bat_type: batType,
           sys_volt: sysVolt,
-          bat_cap: batCap
+          bat_cap: batCap,
+          sheet_record_active: sheetRecordActive,
+          sheet_start_time: sheetStartTime,
+          sheet_end_time: sheetEndTime
       });
       setSettingsStatus('Status: Synchronized with ESP32');
   };
@@ -578,9 +587,39 @@ export default function Home() {
                             </div>
                         </div>
 
+                        <div className="pt-6 mt-4 border-t border-gray-100">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="p-3 bg-green-100 rounded-xl">
+                                    <Database className="w-6 h-6 text-green-600" />
+                                </div>
+                                <div>
+                                    <h3 className="text-xl font-bold text-gray-900">Integrasi Google Sheets</h3>
+                                    <p className="text-sm text-gray-500">Rekam data telemetri otomatis ke cloud via Apps Script</p>
+                                </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+                                <div className="flex items-center justify-between sm:justify-start gap-4">
+                                    <label className="text-sm text-gray-600 font-medium">Aktifkan Rekaman</label>
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" className="sr-only peer" checked={sheetRecordActive} onChange={(e) => setSheetRecordActive(e.target.checked)} />
+                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-600 font-medium mb-1">Mulai Rekam (Jam)</label>
+                                    <input type="time" required value={sheetStartTime} onChange={e => setSheetStartTime(e.target.value)} disabled={!sheetRecordActive} className="w-full" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm text-gray-600 font-medium mb-1">Selesai Rekam (Jam)</label>
+                                    <input type="time" required value={sheetEndTime} onChange={e => setSheetEndTime(e.target.value)} disabled={!sheetRecordActive} className="w-full" />
+                                </div>
+                            </div>
+                        </div>
+
                         <div className="pt-4 border-t border-gray-100 flex flex-col gap-4">
                             <button type="submit" className="w-full text-white font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 shadow-md hover:shadow-lg">
-                                <Zap className="w-4 h-4" /> Terapkan ke ESP32
+                                <Zap className="w-4 h-4" /> Simpan Pengaturan
                             </button>
                             <span className="text-sm text-gray-500 text-center block font-medium">
                                 {settingsStatus === 'Status: Synchronized with ESP32' && <CheckCircle className="w-4 h-4 text-green-500 inline-block align-middle mr-1" />}
@@ -588,29 +627,6 @@ export default function Home() {
                             </span>
                         </div>
                     </form>
-                </div>
-
-                {/* Firmware Update (OTA) Form */}
-                <div className="glass-card rounded-2xl p-6 md:p-8 col-span-1 lg:col-span-2 mt-2 bg-gray-50">
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-purple-100 rounded-xl">
-                            <Cpu className="w-6 h-6 text-purple-600" />
-                        </div>
-                        <div>
-                            <h3 className="text-xl font-bold text-gray-900">Update Firmware (OTA)</h3>
-                            <p className="text-sm text-gray-500">Unggah file .bin untuk mem-flash ESP32 via WiFi</p>
-                        </div>
-                    </div>
-
-                    <div className="flex flex-col gap-4 max-w-xl">
-                        <input type="file" accept=".bin" className="block w-full text-sm text-gray-600 file:mr-4 file:py-3 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-white file:text-gray-900 hover:file:bg-gray-100 transition-colors cursor-pointer border border-gray-300 rounded-xl bg-white shadow-sm" />
-                        <button onClick={() => alert("Note: Because this dashboard is now hosted online on Vercel/Firebase, OTA updates require the ESP32 to download the .bin from Firebase Storage. This feature will be available in the next firmware upgrade!")} className="w-full text-gray-700 font-bold px-6 py-3 rounded-lg transition-all flex items-center justify-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 shadow-sm">
-                            <Cpu className="w-4 h-4" /> Upload Firmware Baru
-                        </button>
-                        <span className="text-sm text-gray-500 text-center block mt-2 font-medium">
-                            <span className="align-middle">Status: Menunggu File</span>
-                        </span>
-                    </div>
                 </div>
             </div>
         )}
